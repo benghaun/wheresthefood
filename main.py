@@ -1,3 +1,4 @@
+import os
 import json
 import sqlite3
 
@@ -6,10 +7,12 @@ from flask import request, jsonify, render_template
 
 app = Flask(__name__)
 
+GMAPKEY=os.environ.get('gmapkey')
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('index.html')
+    url="https://maps.googleapis.com/maps/api/js?key={}&callback=initMap".format(GMAPKEY)
+    return render_template('index.html', gmapsurl=url)
 
 
 @app.route('/list', methods=['GET'])

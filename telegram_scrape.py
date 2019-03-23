@@ -83,9 +83,9 @@ for message in client.iter_messages(kiasufoodies, limit=30):
                 # extract timings
                 if "am" in line or "pm" in line:
                     if "Before" in line:
-                        timing = "bef {}".format(line.split(" ")[-1])
+                        timing = "Before {}".format(line.split(" ")[-1])
                     elif "onwards" in line:
-                        timing = "aft {}".format(line.split(" ")[-2])
+                        timing = "After {}".format(line.split(" ")[-2])
                     elif "-" in line:
                         for word in line.split(" "):
                             if "-" in word:

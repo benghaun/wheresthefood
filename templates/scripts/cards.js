@@ -1,7 +1,7 @@
 var header = document.querySelector('header');
 var section = document.querySelector('section');
 
-var requestURL = 'http://127.0.0.1:5000/getdeals';
+var requestURL = '/getdeals';
 //link of json file here
 
 var request = new XMLHttpRequest();
@@ -38,7 +38,7 @@ function showPlaces(jsonObj) {
         else{
           var address = document.createElement('p');
         }
-        
+
         address.className = "card-subtitle mb-2 text-muted font-small";
 
         var myArticle = document.createElement('card');

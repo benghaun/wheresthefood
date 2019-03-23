@@ -17,17 +17,23 @@ request.onload = function() {
 
 function showPlaces(jsonObj) {
     var discounts = jsonObj;
-    var row;
+    var row = document.getElementById('cardRow');
     var mainContainer = document.getElementById('maincontainer');
+    
     for (var i = 0; i < discounts.length; i++) {
-        if (i % 3 === 0) {
-          row = document.createElement('div');
-          row.className = 'row justify-content-center';
-          mainContainer.appendChild(row);
-        }
+        // if (i % 3 === 0) {
+        //   row = document.createElement('div');
+        //   row.className = 'row justify-content-center';
+        //   mainContainer.appendChild(row);
+        // }
+
+        // row = document.createElement('div');
+        // row.className = 'row justify-content-center';
+        
+
         var col = document.createElement('div');
-        col.className = 'col';
-        row.appendChild(col);
+        col.className = 'column card';
+        // row.appendChild(col);
 
         //check if address url is there
         if (discounts[i].address_url != null){
@@ -42,7 +48,7 @@ function showPlaces(jsonObj) {
         address.className = "card-subtitle mb-2 text-muted font-small";
 
         var myArticle = document.createElement('card');
-        myArticle.className = "card card-body";
+        myArticle.className = "card-body column-img";
 
         var days = document.createElement('p');
         var endDate = document.createElement('p');
@@ -66,17 +72,17 @@ function showPlaces(jsonObj) {
         // cardlink.textContent = discounts[i].timing;
 
         // cardlink.setAttribute('href', discounts[i].timing);
-
+        
         myArticle.appendChild(promoName);
         myArticle.appendChild(address);
         myArticle.appendChild(days);
         myArticle.appendChild(time);
         myArticle.appendChild(endDate);
+        
         // myArticle.appendChild(cardlink);
         
-
         col.appendChild(myArticle);
-        
+        row.appendChild(col);
     }
     
 }

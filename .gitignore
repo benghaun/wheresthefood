@@ -1,3 +1,4 @@
 venv
 .idea
 benghaun.session
+__pycache__

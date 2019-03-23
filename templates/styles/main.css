@@ -2,3 +2,10 @@
   width: 18rem;
   /* height: 25rem; */
 }
+
+@media screen and (max-width: 800px) {
+  .col {
+    flex: 50%;
+    max-width: 50%;
+  }
+}

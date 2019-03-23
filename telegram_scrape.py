@@ -47,27 +47,32 @@ def get_postal_codes(url):
     :return: list of postal codes
     """
     soup = BeautifulSoup(requests.get(url).text, features='html5lib')
-    all_postal = soup.find_all(string=re.compile('^Singapore [0-9]{5}'))
+    all_postal = soup.find_all(string=re.compile('Singapore [0-9]{5,6}$'))
     result = []
     for postal in all_postal:
-        result.append(str(postal))
+        result.append(str(postal).strip())
     return result
 
 
 def parse_messages():
     conn.execute('DROP TABLE deals')
-    conn.execute('CREATE TABLE deals (name text, enddate date, addresses text, days text, info text, timing text)')
+    conn.execute('CREATE TABLE deals (name text, enddate date, addresses text, address_txt text, '
+                 'address_url text, days text, info text, timing text, dayinfo text)')
     months = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
               "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
     year = date.today().year
     for message in get_messages():
-        # print(message.entities)
         put_database = True
         address_done = False
         addresses = []
+        address_text = None
+        address_url = None
+        timeinfo = None
         days = []
         text = message.message
         if text is None:
+            continue
+        if "FLASH SALE" in text or "SingSaver" in text:
             continue
         lines = text.splitlines()
         name = ""
@@ -109,6 +114,7 @@ def parse_messages():
                                 last_date = date(year, month_num, day)
                                 if last_date < date.today():
                                     put_database = False
+
                             break
 
                     # extract timings
@@ -122,14 +128,24 @@ def parse_messages():
                                 if "-" in word:
                                     timing = word
 
+                    # extract days
+                    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                    for day in days:
+                        if day in line:
+                            timeinfo = line[1:].strip()
+                            break
+
             # get url that leads to info about discount
             if "Source" in line:
                 info = line.split(":")[-1]
 
             # extract address
             if line[0] == "📍":
-                if "#" in line:
-                    addresses.append(line[1:])
+                address_text = line[1:].strip()
+                if address_text == "Store Locator":
+                    address_text = "All Outlets"
+                if "#" in line or re.search(r'[sS][0-9]{5,6}', line):
+                    addresses.append(line[1:].strip())
                     address_done = True
 
         # parse provided link to find addresses if applicable
@@ -138,9 +154,11 @@ def parse_messages():
                 if type(entity) == MessageEntityTextUrl:
                     if 'goo.gl' not in entity.url:
                         addresses = get_postal_codes(entity.url)
+                        address_url = entity.url
         if put_database:
-            conn.execute("INSERT INTO deals (name, enddate, addresses, info, timing) VALUES(?,?,?,?,?)", (name, last_date, json.dumps(addresses), info, timing))
+            conn.execute("INSERT INTO deals (name, enddate, addresses, address_txt, address_url, info, timing,dayinfo) VALUES(?,?,?,?,?,?,?,?)",
+                         (name, last_date, json.dumps(addresses), address_text, address_url, info, timing, timeinfo))
     conn.commit()
     conn.close()
 
-
+parse_messages()

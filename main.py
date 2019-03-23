@@ -38,13 +38,16 @@ def getdeals():
         days = None
         if row[2] is not None:
             addresses = json.loads(row[2])
-        if row[3] is not None:
-            days = json.loads(row[3])
+        if row[5] is not None:
+            days = json.loads(row[5])
         output.append({"name": row[0],
                        "enddate": row[1],
+                       "address_txt": row[3],
+                       "address_url": row[4],
                        "addresses": addresses,
                        "days": days,
-                       "timing": row[4]})
+                       "timing": row[7],
+                       "timeinfo": row[8]})
     response = jsonify(output)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response

@@ -2,3 +2,4 @@ venv
 .idea
 benghaun.session
 __pycache__
+deals.db

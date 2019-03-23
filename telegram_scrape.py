@@ -51,6 +51,8 @@ def get_postal_codes(url):
     result = []
     for postal in all_postal:
         result.append(str(postal))
+    return result
+
 
 def parse_messages():
     conn.execute('DROP TABLE deals')

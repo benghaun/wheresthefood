@@ -12,29 +12,53 @@ request.send();
 
 request.onload = function() {
     var discounts = request.response;
-    populateHeader(discounts);
-    // showHeroes(discounts);
+    showPlaces(discounts);
   }
 
 function showPlaces(jsonObj) {
-    var myArticle = document.createElement('article');
-    var address = document.createElement('storeAdd');
-    var days = document.createElement('storeDays')
-    var endDate = document.createElement('storeEnd')
-    var promoName = document.createElement('name')
-    var storeTime = document.createElement('timing')
+    var discounts = jsonObj;
+    var row;
+    var mainContainer = document.getElementById('maincontainer');
+    for (var i = 0; i < discounts.length; i++) {
+        if (i % 3 === 0) {
+          row = document.createElement('div');
+          row.className = 'row justify-content-center';
+          mainContainer.appendChild(row);
+        }
+        var col = document.createElement('div');
+        col.className = 'col';
+        row.appendChild(col);
 
-    address.textContent = discounts.addresses;
-    days.textContent = discounts.days;
-    endDate.textContent = 'End date' + discounts.enddate;
-    promoName.textContent = 'Name of promo ' + discounts.name;
-    storeTime.textContent = discounts.timing;
+        var myArticle = document.createElement('card');
+        myArticle.className = "card card-body";
+        var address = document.createElement('small');
+        address.className = "card-subtitle mb-2 text-muted font-small";
+        var days = document.createElement('p')
+        var endDate = document.createElement('p')
+        var promoName = document.createElement('h6')
 
-    myArticle.appendChild(address);
-    myArticle.appendChild(days);
-    myArticle.appendChild(endDate);
-    myArticle.appendChild(promoName);
-    myArticle.appendChild(storeTime);
-  
-    section.appendChild(myArticle);
+        var cardlink = document.createElement('a')
+        cardlink.className = "card-link";
+
+        address.textContent = discounts[i].addresses;
+        days.textContent = discounts[i].days;
+        endDate.textContent = 'End date: ' + discounts[i].enddate;
+        promoName.textContent = discounts[i].name;
+        cardlink.textContent = discounts[i].timing;
+
+        cardlink.setAttribute('href', discounts[i].timing);
+        // cardlink.innerHTML = discounts[i].timing;
+        // window.open(cardlink)
+        // console.log(cardlink);
+
+        myArticle.appendChild(promoName);
+        myArticle.appendChild(address);
+        myArticle.appendChild(days);
+        myArticle.appendChild(endDate);
+        myArticle.appendChild(cardlink);
+
+        col.appendChild(myArticle);
+        
+    }
+    
 }

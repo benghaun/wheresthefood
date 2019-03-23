@@ -1,6 +1,7 @@
 import os
 import json
 import sqlite3
+import requests
 
 from flask import Flask
 from flask import request, jsonify, render_template, send_from_directory
@@ -52,3 +53,12 @@ def getdeals():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+@app.route('/viewport', methods=['GET'])
+def viewport():
+    area = request.args.get('search')
+    url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&region=sg&key={}'.format(area,GMAPKEY)
+    r = requests.get(url)
+    viewport = r.json()['results'][0]['geometry']['viewport']
+    response = jsonify(results=viewport)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response

@@ -2,7 +2,7 @@ import json
 import sqlite3
 
 from flask import Flask
-from flask import request, jsonify, render_template
+from flask import request, jsonify, render_template, send_from_directory
 
 app = Flask(__name__)
 
@@ -15,6 +15,16 @@ def home():
 @app.route('/list', methods=['GET'])
 def deal_list():
     return render_template('list.html')
+
+
+@app.route('/scripts/<path:path>')
+def send_js(path):
+    return send_from_directory('templates/scripts', path)
+
+
+@app.route('/styles/<path:path>')
+def send_css(path):
+    return send_from_directory('templates/styles', path)
 
 
 @app.route('/getdeals', methods=['GET'])

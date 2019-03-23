@@ -1,18 +1,14 @@
 var infowindow;
 var map;
-function addMarker (marker){
-    map.markers[map.markers.length]=marker;
+function addMarker (markerarray,marker){
+    markerarray[markerarray.length]=marker;
 };
 
-function getMarkers(){
-        return map.markers
-};
-
-function createMarker(name,latlng){
+function createMarker(string,latlng){
     var marker=new google.maps.Marker({position:latlng,map:map});
     google.maps.event.addListener(marker,"click",function(){
         if(infowindow)infowindow.close();
-        infowindow=new google.maps.InfoWindow({content:name});
+        infowindow=new google.maps.InfoWindow({content:string});
         infowindow.open(map,marker);
     });
     return marker;
@@ -22,39 +18,41 @@ function initMap(){
     var singapore=new google.maps.LatLng(1.35,103.82);
     var options={zoom:11,center:singapore};
     map=new google.maps.Map(document.getElementById("map"),options);
-    map.markers=new Array();
+    map.discmarkers=new Array();
 
-    var a=new Array();
-    
-    var t=new Object();
-    t.name="Bugis Junction"
-    t.lat=1.29886
-    t.lng=103.855548
-    a[0]=t;
-    
-    var t=new Object();
-    t.name="Eastpoint"
-    t.lat=1.342715
-    t.lng=103.953041
-    a[1]=t;
-    
-    var t=new Object();
-    t.name="Yishun Townsquare"
-    t.lat=1.427383
-    t.lng=103.836699
-    a[2]=t;
-    
-    for(var i=0;i<a.length;i++){
-        var latlng=new google.maps.LatLng(a[i].lat,a[i].lng);
-        addMarker(createMarker(a[i].name,latlng));
-    }
-    console.log(getMarkers());
+    $.ajax({
+        url: "/getdeals",
+        method: "GET",
+        dataType: "json",
+        data: {},
+        complete: function(xhr, status) {},
+        success: function(data, status, xhr) {
+            for(var i=0;i<data.length;i++){
+                var card = new Object();
+                card.name = data[i].name;
+                card.enddate = data[i].enddate;
+                card.timeinfo = (data[i].timeinfo)? data[i].timeinfo:'';
+                card.timeinfo = '<br><br>'+card.timeinfo;
+                card.latlongs = data[i].latlongs;
+                var contentString = '<div id="infoview">'+
+                '<p><b>'+ card.name + '</b><br>' +
+                'Until '+ card.enddate.substring(0, card.enddate.length-13) +
+                card.timeinfo +
+                '</p></div>'
+                for(var j=0;j<card.latlongs.length;j++){
+                    var latlng=new google.maps.LatLng(card.latlongs[j][0],card.latlongs[j][1]);
+                    addMarker(map.discmarkers,createMarker(contentString,latlng));
+                }
+                
+            }
+        }
+    });
 };
 
 $(document).ready(function() {
     $("#zoomarea").click(function() {
         var area = $("#zoominput").val();
-        var urlString = "http://127.0.0.1:5000/viewport?search=" + area;
+        var urlString = "/viewport?search=" + area;
         $.ajax({
             url: urlString,
             method: "GET",

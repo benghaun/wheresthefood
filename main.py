@@ -1,18 +1,23 @@
 import os
 import json
+import random
 import sqlite3
-import requests
 
 from flask import Flask
 from flask import request, jsonify, render_template, send_from_directory
+import requests
+
+from utils import search_places_by_coordinate
+
 
 app = Flask(__name__)
 
-GMAPKEY=os.environ.get('gmapkey')
+GMAPKEY = os.environ.get('gmapkey')
+
 
 @app.route('/', methods=['GET'])
 def home():
-    url="https://maps.googleapis.com/maps/api/js?key={}&callback=initMap".format(GMAPKEY)
+    url = "https://maps.googleapis.com/maps/api/js?key={}&callback=initMap".format(GMAPKEY)
     return render_template('index.html', gmapsurl=url)
 
 
@@ -57,12 +62,18 @@ def getdeals():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+
 @app.route('/viewport', methods=['GET'])
 def viewport():
     area = request.args.get('search')
     url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&region=sg&key={}'.format(area,GMAPKEY)
     r = requests.get(url)
-    viewport = r.json()['results'][0]['geometry']['viewport']
-    response = jsonify(results=viewport)
+    result = r.json()['results'][0]['geometry']['viewport']
+    lat = str(r.json()['results'][0]['geometry']['location']['lat'])
+    lng = str(r.json()['results'][0]['geometry']['location']['lng'])
+    result['nearby'] = search_places_by_coordinate(lat + "," + lng, "600")
+    chosen = random.choice(result['nearby'])
+    result['chosen'] = chosen
+    response = jsonify(results=result)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response

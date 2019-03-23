@@ -29,33 +29,51 @@ function showPlaces(jsonObj) {
         col.className = 'col';
         row.appendChild(col);
 
+        //check if address url is there
+        if (discounts[i].address_url != null){
+          //address
+          var address = document.createElement('a');
+          address.setAttribute('href', discounts[i].address_url);
+        }
+        else{
+          var address = document.createElement('p');
+        }
+        
+        address.className = "card-subtitle mb-2 text-muted font-small";
+
         var myArticle = document.createElement('card');
         myArticle.className = "card card-body";
-        var address = document.createElement('small');
-        address.className = "card-subtitle mb-2 text-muted font-small";
-        var days = document.createElement('p')
-        var endDate = document.createElement('p')
-        var promoName = document.createElement('h6')
+
+        var days = document.createElement('p');
+        var endDate = document.createElement('p');
+
+        //promo name
+        var promoName = document.createElement('h6');
+
+        //time info
+        var time = document.createElement('p');
+
 
         var cardlink = document.createElement('a')
         cardlink.className = "card-link";
 
-        address.textContent = discounts[i].addresses;
+        //link discounts to texts
+        address.textContent = discounts[i].address_txt;
         days.textContent = discounts[i].days;
         endDate.textContent = 'End date: ' + discounts[i].enddate;
         promoName.textContent = discounts[i].name;
-        cardlink.textContent = discounts[i].timing;
+        time.textContent = discounts[i].timeinfo;
+        // cardlink.textContent = discounts[i].timing;
 
-        cardlink.setAttribute('href', discounts[i].timing);
-        // cardlink.innerHTML = discounts[i].timing;
-        // window.open(cardlink)
-        // console.log(cardlink);
+        // cardlink.setAttribute('href', discounts[i].timing);
 
         myArticle.appendChild(promoName);
         myArticle.appendChild(address);
         myArticle.appendChild(days);
+        myArticle.appendChild(time);
         myArticle.appendChild(endDate);
-        myArticle.appendChild(cardlink);
+        // myArticle.appendChild(cardlink);
+        
 
         col.appendChild(myArticle);
         

@@ -66,7 +66,7 @@ function showPlaces(jsonObj) {
         //link discounts to texts
         address.textContent = discounts[i].address_txt;
         days.textContent = discounts[i].days;
-        endDate.textContent = 'Promotion ends on: ' + discounts[i].enddate;
+        endDate.textContent = 'Ends ' + discounts[i].enddate.substring(0, discounts[i].enddate.length-13);
         promoName.textContent = discounts[i].name;
         time.textContent = discounts[i].timeinfo;
         // cardlink.textContent = discounts[i].timing;

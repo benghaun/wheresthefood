@@ -51,7 +51,8 @@ def getdeals():
                        "addresses": addresses,
                        "days": days,
                        "timing": row[7],
-                       "timeinfo": row[8]})
+                       "timeinfo": row[8],
+                       "latlongs": json.loads(row[9])})
     response = jsonify(output)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response

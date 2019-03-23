@@ -11,6 +11,8 @@ from telethon.errors import SessionPasswordNeededError
 from telethon.tl.types import MessageEntityTextUrl
 from telethon.sync import TelegramClient
 
+from utils import getLatLng
+
 
 conn = sqlite3.connect('deals.db', detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
 api_id = int(os.environ.get("TELEGRAM_API_ID"))
@@ -55,9 +57,13 @@ def get_postal_codes(url):
 
 
 def parse_messages():
+    """
+    Goes through all messages, extracts relevant data and puts it in the database
+    :return:
+    """
     conn.execute('DROP TABLE deals')
-    conn.execute('CREATE TABLE deals (name text, enddate date, addresses text, address_txt text, '
-                 'address_url text, days text, info text, timing text, dayinfo text)')
+    conn.execute('CREATE TABLE deals (name text primary key, enddate date, addresses text, address_txt text, '
+                 'address_url text, days text, info text, timing text, dayinfo text, latlongs text)')
     months = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
               "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
     year = date.today().year
@@ -69,6 +75,7 @@ def parse_messages():
         address_url = None
         timeinfo = None
         days = []
+        latlongs = []
         text = message.message
         if text is None:
             continue
@@ -92,6 +99,9 @@ def parse_messages():
                 # information about discount (eg 1 for 1 milk tea)
                 if first_tick:
                     name += line[1:]
+                    cur = conn.execute('SELECT NAME FROM deals where NAME=?', (name,))
+                    if len(cur.fetchall()) == 0:
+                        continue
                     first_tick = False
                 else:
                     # extract end date
@@ -155,9 +165,16 @@ def parse_messages():
                     if 'goo.gl' not in entity.url:
                         addresses = get_postal_codes(entity.url)
                         address_url = entity.url
+        for address in addresses:
+            print(address)
+            latlong = getLatLng(address)
+            latlongs.append([latlong['lat'], latlong['lng']])
         if put_database:
-            conn.execute("INSERT INTO deals (name, enddate, addresses, address_txt, address_url, info, timing,dayinfo) VALUES(?,?,?,?,?,?,?,?)",
-                         (name, last_date, json.dumps(addresses), address_text, address_url, info, timing, timeinfo))
+            try:
+                conn.execute("INSERT INTO deals (name, enddate, addresses, address_txt, address_url, info, timing, dayinfo, latlongs) VALUES(?,?,?,?,?,?,?,?,?)",
+                             (name, last_date, json.dumps(addresses), address_text, address_url, info, timing, timeinfo, json.dumps(latlongs)))
+            except sqlite3.IntegrityError:
+                pass
     conn.commit()
     conn.close()
 

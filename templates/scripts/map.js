@@ -1,9 +1,10 @@
 var infowindow;
-function addMarker (map, marker){
+var map;
+function addMarker (marker){
     map.markers[map.markers.length]=marker;
 };
 
-function getMarkers(map){
+function getMarkers(){
         return map.markers
 };
 
@@ -45,7 +46,30 @@ function initMap(){
     
     for(var i=0;i<a.length;i++){
         var latlng=new google.maps.LatLng(a[i].lat,a[i].lng);
-        addMarker(map,createMarker(a[i].name,latlng));
+        addMarker(createMarker(a[i].name,latlng));
     }
-    console.log(getMarkers(map));
+    console.log(getMarkers());
 };
+
+$(document).ready(function() {
+    $("#zoomarea").click(function() {
+        var area = $("#zoominput").val();
+        var urlString = "http://127.0.0.1:5000/viewport?search=" + area;
+        $.ajax({
+            url: urlString,
+            method: "GET",
+            dataType: "json",
+            data: {},
+            complete: function(xhr, status) {},
+            success: function(data, status, xhr) {
+                var bounds = new google.maps.LatLngBounds(data.results.southwest,data.results.northeast)
+                map.fitBounds(bounds);
+            }
+        });
+    });
+    
+    $("#zoominput").on("keydown", function(e) { 
+        if(e.keyCode == 13)
+            $("#zoomarea").click() 
+    });
+}); 

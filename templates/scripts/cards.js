@@ -28,10 +28,11 @@ function showPlaces(jsonObj) {
         var col = document.createElement('div');
         col.className = 'col';
         row.appendChild(col);
+
         var myArticle = document.createElement('card');
         myArticle.className = "card card-body";
-        var address = document.createElement('p');
-        address.className = "card-subtitle mb-2 text-muted";
+        var address = document.createElement('small');
+        address.className = "card-subtitle mb-2 text-muted font-small";
         var days = document.createElement('p')
         var endDate = document.createElement('p')
         var promoName = document.createElement('h6')

@@ -12,8 +12,8 @@ conn.execute('CREATE TABLE deals (name text, enddate date, addresses text, days 
 api_id = int(os.environ.get("TELEGRAM_API_ID"))
 api_hash = os.environ.get("TELEGRAM_API_HASH")
 
-phone = '+6585717316'
-username = 'benghaun'
+phone = os.environ.get("TELEGRAM_PHONE")
+username = os.environ.get("TELEGRAM_USERNAME")
 
 # (2) Create the client and connect
 client = TelegramClient(username, api_id, api_hash)

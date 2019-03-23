@@ -39,7 +39,7 @@ def send_css(path):
 @app.route('/getdeals', methods=['GET'])
 def getdeals():
     conn = sqlite3.connect('deals.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-    cur = conn.execute('SELECT * FROM DEALS') 
+    cur = conn.execute('SELECT * FROM DEALS')
     rows = cur.fetchall()
     output = []
     for row in rows:

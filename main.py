@@ -4,7 +4,7 @@ import random
 import sqlite3
 
 from flask import Flask
-from flask import request, jsonify, render_template, send_from_directory
+from flask import request, jsonify, render_template, send_from_directory, redirect
 import requests
 
 from utils import search_places_by_coordinate
@@ -13,6 +13,14 @@ from utils import search_places_by_coordinate
 app = Flask(__name__)
 
 GMAPKEY = os.environ.get('gmapkey')
+
+
+@app.before_request
+def before_request():
+    if request.url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
 
 
 @app.route('/', methods=['GET'])

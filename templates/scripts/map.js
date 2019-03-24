@@ -54,7 +54,13 @@ function initMap(){
 
 $(document).ready(function() {
     $("#zoomarea").click(function() {
+        var searchBtn = document.getElementById('zoomarea');
+        var randomBtn = document.getElementById('randomchoice')
+        randomBtn.disabled = true;
+        searchBtn.innerHTML = "Loading...";
+        searchBtn.disabled = true;
         var area = $("#zoominput").val();
+        $("#zoominput").blur();
         var urlString = "/viewport?search=" + area;
         for(var i=0;i<map.nearbymarkers.length;i++){
             map.nearbymarkers[i].setMap(null);
@@ -78,6 +84,9 @@ $(document).ready(function() {
                     addMarker(map.nearbymarkers,createMarker(contentString,latlng,bluedot));
                 }
                 map.chosen = data.results.chosen;
+                searchBtn.innerHTML = "Search";
+                searchBtn.disabled = false;
+                randomBtn.disabled = false;
             }
         });
     });
@@ -88,6 +97,11 @@ $(document).ready(function() {
     });
 
     $("#randomchoice").click(function() {
+        var searchBtn = document.getElementById('zoomarea');
+        var randomBtn = document.getElementById('randomchoice')
+        randomBtn.disabled = true;
+        randomBtn.innerHTML = "Loading...";
+        searchBtn.disabled = true;
         var area = $("#zoominput").val();
         var urlString = "/viewport?search=" + area;
         for(var i=0;i<map.nearbymarkers.length;i++){
@@ -109,6 +123,8 @@ $(document).ready(function() {
                     '</p></div>'
                 var latlng=new google.maps.LatLng(data.results.chosen.latlongs[0][0],data.results.chosen.latlongs[0][1]);
                 addMarker(map.nearbymarkers,createMarker(contentString,latlng,bluedot));
+                randomBtn.disabled = false;
+                randomBtn.innerHTML = "Anything";
             }
         });
     });

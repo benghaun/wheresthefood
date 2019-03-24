@@ -5,6 +5,11 @@
   flex-wrap: wrap;
   padding: 0 4px;
 }
+a.card-body {
+  text-decoration: none;
+  color: black;
+}
+
 
 /* Create four equal columns that sits next to each other */
 .column {

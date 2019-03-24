@@ -21,16 +21,7 @@ function showPlaces(jsonObj) {
     var mainContainer = document.getElementById('maincontainer');
     
     for (var i = 0; i < discounts.length; i++) {
-        // if (i % 3 === 0) {
-        //   row = document.createElement('div');
-        //   row.className = 'row justify-content-center';
-        //   mainContainer.appendChild(row);
-        // }
-
-        // row = document.createElement('div');
-        // row.className = 'row justify-content-center';
         
-
         var col = document.createElement('div');
         col.className = 'column card';
         // row.appendChild(col);
@@ -40,6 +31,7 @@ function showPlaces(jsonObj) {
           //address
           var address = document.createElement('a');
           address.setAttribute('href', discounts[i].address_url);
+          
         }
         else{
           var address = document.createElement('p');
@@ -47,8 +39,9 @@ function showPlaces(jsonObj) {
 
         address.className = "card-subtitle mb-2 text-muted font-small";
 
-        var myArticle = document.createElement('card');
+        var myArticle = document.createElement('a');
         myArticle.className = "card-body column-img";
+        myArticle.setAttribute('href', "/?selected="+discounts[i].name);
 
         var days = document.createElement('p');
         var endDate = document.createElement('p');

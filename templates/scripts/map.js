@@ -83,6 +83,8 @@ $(document).ready(function() {
                     var latlng=new google.maps.LatLng(data.results.nearby[j].latlongs[0][0],data.results.nearby[j].latlongs[0][1]);
                     addMarker(map.nearbymarkers,createMarker(contentString,latlng,bluedot));
                 }
+                document.getElementById('chosen').value = data.results.chosen;
+                document.getElementById('bounds').value = bounds
                 map.chosen = data.results.chosen;
                 searchBtn.innerHTML = "Search";
                 searchBtn.disabled = false;
@@ -97,6 +99,23 @@ $(document).ready(function() {
     });
 
     $("#randomchoice").click(function() {
+        // remove existing markers
+        for(var i=0;i<map.nearbymarkers.length;i++){
+            map.nearbymarkers[i].setMap(null);
+        }
+        map.nearbymarkers = new Array();
+        var chosen = document.getElementById('chosen').value
+        if (chosen) {
+            var bounds = document.getElementById('bounds').value;
+            map.fitBounds(bounds);
+            var contentString = '<div id="infoview">'+
+                '<p><b>'+ chosen.name + '</b><br>' +
+                '\u2B50 '+ chosen.rating +
+                '</p></div>'
+            var latlng=new google.maps.LatLng(chosen.latlongs[0][0],chosen.latlongs[0][1]);
+            addMarker(map.nearbymarkers,createMarker(contentString,latlng,bluedot));
+            return;
+        }
         var searchBtn = document.getElementById('zoomarea');
         var randomBtn = document.getElementById('randomchoice')
         randomBtn.disabled = true;
@@ -104,10 +123,6 @@ $(document).ready(function() {
         searchBtn.disabled = true;
         var area = $("#zoominput").val();
         var urlString = "/viewport?search=" + area;
-        for(var i=0;i<map.nearbymarkers.length;i++){
-            map.nearbymarkers[i].setMap(null);
-        }
-        map.nearbymarkers = new Array();
         $.ajax({
             url: urlString,
             method: "GET",

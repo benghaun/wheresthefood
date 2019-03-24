@@ -133,7 +133,8 @@ $(document).ready(function() {
         randomBtn.innerHTML = "Loading...";
         searchBtn.disabled = true;
         var area = $("#zoominput").val();
-        var urlString = "/viewport?search=" + area;
+        var minstar = minRating();
+        var urlString = "/viewport?search=" + area + "&minrating=" + minstar;
         $.ajax({
             url: urlString,
             method: "GET",

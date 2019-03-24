@@ -66,7 +66,11 @@ def getdeals():
 @app.route('/viewport', methods=['GET'])
 def viewport():
     area = request.args.get('search')
-    minrating = int(request.args.get('minrating'))
+    minrating = request.args.get('minrating')
+    if minrating != None:
+        minrating = int(minrating)
+    else:
+        minrating = 0
     url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&region=sg&key={}'.format(area,GMAPKEY)
     r = requests.get(url)
     result = r.json()['results'][0]['geometry']['viewport']

@@ -18,9 +18,13 @@ function createMarker(string,latlng,pin){
 };
 
 function initMap(){
-    var singapore=new google.maps.LatLng(1.35,103.82);
-    var options={zoom:11,center:singapore};
+    const singapore=new google.maps.LatLng(1.35,103.82);
+    const options={zoom:11,center:singapore};
     map=new google.maps.Map(document.getElementById("map"),options);
+
+    const currentUrl = new URLSearchParams(window.location.search);
+    const selected = (currentUrl.get("selected"))? currentUrl.get("selected"):'';
+
     map.discmarkers=new Array();
     map.nearbymarkers = new Array();
 
@@ -32,20 +36,22 @@ function initMap(){
         complete: function(xhr, status) {},
         success: function(data, status, xhr) {
             for(var i=0;i<data.length;i++){
-                var card = new Object();
-                card.name = data[i].name;
-                card.enddate = data[i].enddate;
-                card.timeinfo = (data[i].timeinfo)? data[i].timeinfo:'';
-                card.timeinfo = '<br><br>'+card.timeinfo;
-                card.latlongs = data[i].latlongs;
-                var contentString = '<div id="infoview">'+
-                    '<p><b>'+ card.name + '</b><br>' +
-                    'Until '+ card.enddate.substring(0, card.enddate.length-13) +
-                    card.timeinfo +
-                    '</p></div>'
-                for(var j=0;j<card.latlongs.length;j++){
-                    var latlng=new google.maps.LatLng(card.latlongs[j][0],card.latlongs[j][1]);
-                    addMarker(map.discmarkers,createMarker(contentString,latlng,reddot));
+                if (selected.includes(data[i].name)){
+                    var card = new Object();
+                    card.name = data[i].name;
+                    card.enddate = data[i].enddate;
+                    card.timeinfo = (data[i].timeinfo)? data[i].timeinfo:'';
+                    card.timeinfo = '<br><br>'+card.timeinfo;
+                    card.latlongs = data[i].latlongs;
+                    var contentString = '<div id="infoview">'+
+                        '<p><b>'+ card.name + '</b><br>' +
+                        'Until '+ card.enddate.substring(0, card.enddate.length-13) +
+                        card.timeinfo +
+                        '</p></div>'
+                    for(var j=0;j<card.latlongs.length;j++){
+                        var latlng=new google.maps.LatLng(card.latlongs[j][0],card.latlongs[j][1]);
+                        addMarker(map.discmarkers,createMarker(contentString,latlng,reddot));
+                    }
                 }
             }
         }

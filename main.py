@@ -66,12 +66,13 @@ def getdeals():
 @app.route('/viewport', methods=['GET'])
 def viewport():
     area = request.args.get('search')
+    minrating = int(request.args.get('minrating'))
     url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&region=sg&key={}'.format(area,GMAPKEY)
     r = requests.get(url)
     result = r.json()['results'][0]['geometry']['viewport']
     lat = str(r.json()['results'][0]['geometry']['location']['lat'])
     lng = str(r.json()['results'][0]['geometry']['location']['lng'])
-    result['nearby'] = search_places_by_coordinate(lat + "," + lng, "600")
+    result['nearby'] = search_places_by_coordinate(lat + "," + lng, "600",minrating)
     chosen = random.choice(result['nearby'])
     result['chosen'] = chosen
     response = jsonify(results=result)

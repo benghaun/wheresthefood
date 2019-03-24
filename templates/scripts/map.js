@@ -52,6 +52,16 @@ function initMap(){
     });
 };
 
+function updateDropdown(star){
+    document.getElementById("filterRating").innerHTML = star;
+    document.getElementById("filterRating").value = star;
+}
+
+function minRating(){
+    star = document.getElementById("filterRating").value.split(" ")[0];
+    return (star=='Any' || star=='')? '0':star;
+}
+
 $(document).ready(function() {
     $("#zoomarea").click(function() {
         var searchBtn = document.getElementById('zoomarea');
@@ -61,7 +71,8 @@ $(document).ready(function() {
         searchBtn.disabled = true;
         var area = $("#zoominput").val();
         $("#zoominput").blur();
-        var urlString = "/viewport?search=" + area;
+        var minstar = minRating();
+        var urlString = "/viewport?search=" + area + "&minrating=" + minstar;
         for(var i=0;i<map.nearbymarkers.length;i++){
             map.nearbymarkers[i].setMap(null);
         }
@@ -122,7 +133,8 @@ $(document).ready(function() {
         randomBtn.innerHTML = "Loading...";
         searchBtn.disabled = true;
         var area = $("#zoominput").val();
-        var urlString = "/viewport?search=" + area;
+        var minstar = minRating();
+        var urlString = "/viewport?search=" + area + "&minrating=" + minstar;
         $.ajax({
             url: urlString,
             method: "GET",
@@ -143,4 +155,11 @@ $(document).ready(function() {
             }
         });
     });
+
+    $("#any").click(function() { updateDropdown('Any &#11088'); });
+    $("#star5").click(function() { updateDropdown('5 &#11088')});
+    $("#star4").click(function() { updateDropdown('4 &#11088')});
+    $("#star3").click(function() { updateDropdown('3 &#11088')});
+    $("#star2").click(function() { updateDropdown('2 &#11088')});
+    $("#star1").click(function() { updateDropdown('1 &#11088')});
 }); 

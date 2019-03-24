@@ -52,6 +52,10 @@ function initMap(){
     });
 };
 
+function updateDropdown(star){
+    document.getElementById("filterRating").innerHTML = ''+star+ ' &#11088';
+}
+
 $(document).ready(function() {
     $("#zoomarea").click(function() {
         var area = $("#zoominput").val();
@@ -112,4 +116,10 @@ $(document).ready(function() {
             }
         });
     });
+
+    $("#star5").click(function() { updateDropdown(5); });
+    $("#star4").click(function() { updateDropdown(4); });
+    $("#star3").click(function() { updateDropdown(3); });
+    $("#star2").click(function() { updateDropdown(2); });
+    $("#star1").click(function() { updateDropdown(1); });
 }); 

@@ -73,7 +73,20 @@
                 <div class="input-group mx-sm-3">
                     <input type="text" class="form-control" id="zoominput">
                     <div class="input-group-append">
-                        <button id = "zoomarea" class="btn btn-outline-secondary" type="button">Search</button><button id="randomchoice">Anything</button>
+                        <div class="dropdown text-right">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filterRating" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Rating
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" id="star5">5 &#11088</a>
+                                <a class="dropdown-item" href="#" id="star4">4 &#11088</a>
+                                <a class="dropdown-item" href="#" id="star3">3 &#11088</a>
+                                <a class="dropdown-item" href="#" id="star2">2 &#11088</a>
+                                <a class="dropdown-item" href="#" id="star1">1 &#11088</a>
+                            </div>
+                        </div>
+                        <button id = "zoomarea" class="btn btn-outline-secondary" type="button">Search</button>
+                        <button id="randomchoice">Anything</button>
                     </div>
                 </div>
                 <div class="col"></div>

@@ -93,6 +93,7 @@ $(document).ready(function() {
                 document.getElementById('chosen').value = data.results.chosen;
                 document.getElementById('bounds').value = bounds;
                 document.getElementById('prevloc').value = "";
+                while (!map);
                 map.chosen = data.results.chosen;
                 document.getElementById('loadtext').innerHTML = "";
                 searchBtn.disabled = false;

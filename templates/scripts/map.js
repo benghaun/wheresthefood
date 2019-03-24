@@ -21,10 +21,8 @@ function initMap(){
     const singapore=new google.maps.LatLng(1.35,103.82);
     const options={zoom:11,center:singapore};
     map=new google.maps.Map(document.getElementById("map"),options);
-
     const currentUrl = new URLSearchParams(window.location.search);
     const selected = (currentUrl.get("selected"))? currentUrl.get("selected"):'';
-
     map.discmarkers=new Array();
     map.nearbymarkers = new Array();
 
@@ -36,7 +34,7 @@ function initMap(){
         complete: function(xhr, status) {},
         success: function(data, status, xhr) {
             for(var i=0;i<data.length;i++){
-                if (selected.includes(data[i].name)){
+                if (data[i].name === selected || selected === ""){
                     var card = new Object();
                     card.name = data[i].name;
                     card.enddate = data[i].enddate;
@@ -70,6 +68,9 @@ function minRating(){
 
 $(document).ready(function() {
     // request for user's permission for location, and move the map to his current location
+    const currentUrl = new URLSearchParams(window.location.search);
+    const selected = (currentUrl.get("selected"))? currentUrl.get("selected"):'';
+    if (!selected){
     if (navigator.geolocation){
         document.getElementById("loadtext").innerHTML = "Loading current location..."
         var searchBtn = document.getElementById('zoomarea');
@@ -114,6 +115,7 @@ $(document).ready(function() {
             }
         });
 
+    }
     }
     $("#zoomarea").click(function() {
         var searchBtn = document.getElementById('zoomarea');

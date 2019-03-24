@@ -95,7 +95,8 @@ $(document).ready(function() {
                     addMarker(map.nearbymarkers,createMarker(contentString,latlng,bluedot));
                 }
                 document.getElementById('chosen').value = data.results.chosen;
-                document.getElementById('bounds').value = bounds
+                document.getElementById('bounds').value = bounds;
+                document.getElementById('prevloc').value = area;
                 map.chosen = data.results.chosen;
                 searchBtn.innerHTML = "Search";
                 searchBtn.disabled = false;
@@ -115,8 +116,9 @@ $(document).ready(function() {
             map.nearbymarkers[i].setMap(null);
         }
         map.nearbymarkers = new Array();
+        var area = $("#zoominput").val();
         var chosen = document.getElementById('chosen').value
-        if (chosen) {
+        if (chosen && (document.getElementById('prevloc').value === area)) {
             var bounds = document.getElementById('bounds').value;
             map.fitBounds(bounds);
             var contentString = '<div id="infoview">'+
@@ -132,7 +134,6 @@ $(document).ready(function() {
         randomBtn.disabled = true;
         randomBtn.innerHTML = "Loading...";
         searchBtn.disabled = true;
-        var area = $("#zoominput").val();
         var minstar = minRating();
         var urlString = "/viewport?search=" + area + "&minrating=" + minstar;
         $.ajax({
@@ -151,6 +152,7 @@ $(document).ready(function() {
                 var latlng=new google.maps.LatLng(data.results.chosen.latlongs[0][0],data.results.chosen.latlongs[0][1]);
                 addMarker(map.nearbymarkers,createMarker(contentString,latlng,bluedot));
                 randomBtn.disabled = false;
+                searchBtn.disabled = false;
                 randomBtn.innerHTML = "Anything";
             }
         });

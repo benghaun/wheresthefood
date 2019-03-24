@@ -67,16 +67,31 @@ def getdeals():
 def viewport():
     area = request.args.get('search')
     minrating = request.args.get('minrating')
-    if minrating != None:
+    if minrating is not None:
         minrating = int(minrating)
     else:
         minrating = 0
-    url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&region=sg&key={}'.format(area,GMAPKEY)
+    url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&region=sg&key={}'.format(area, GMAPKEY)
     r = requests.get(url)
     result = r.json()['results'][0]['geometry']['viewport']
     lat = str(r.json()['results'][0]['geometry']['location']['lat'])
     lng = str(r.json()['results'][0]['geometry']['location']['lng'])
-    result['nearby'] = search_places_by_coordinate(lat + "," + lng, "600",minrating)
+    result['nearby'] = search_places_by_coordinate(lat + "," + lng, "600", minrating)
+    chosen = random.choice(result['nearby'])
+    result['chosen'] = chosen
+    response = jsonify(results=result)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route('/viewportcoords', methods=['GET'])
+def viewport_coords():
+    coords = request.args.get('coords')
+    lat = float(coords.split(',')[0])
+    lng = float(coords.split(',')[1])
+    result = {'southwest': {"lat": lat-0.0013, "lng": lng-0.0015},
+              'northeast': {"lat": lat+0.0013, "lng": lng+0.0015}}
+    result['nearby'] = search_places_by_coordinate(str(lat) + "," + str(lng), "600")
     chosen = random.choice(result['nearby'])
     result['chosen'] = chosen
     response = jsonify(results=result)

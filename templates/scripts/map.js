@@ -63,6 +63,51 @@ function minRating(){
 }
 
 $(document).ready(function() {
+    // request for user's permission for location, and move the map to his current location
+    if (navigator.geolocation){
+        document.getElementById("loadtext").innerHTML = "Loading current location..."
+        var searchBtn = document.getElementById('zoomarea');
+        var randomBtn = document.getElementById('randomchoice')
+        searchBtn.disabled = true;
+        randomBtn.disabled = true;
+        navigator.geolocation.getCurrentPosition(function(position) {
+           var urlString = "/viewportcoords?coords="+position.coords.latitude + "," + position.coords.longitude;
+           $.ajax({
+            url: urlString,
+            method: "GET",
+            dataType: "json",
+            data: {},
+            complete: function(xhr, status) {},
+            success: function(data, status, xhr) {
+                console.log(data)
+                var bounds = new google.maps.LatLngBounds(data.results.southwest,data.results.northeast)
+                map.fitBounds(bounds);
+                for(var j=0;j<data.results.nearby.length;j++){
+                    var contentString = '<div id="infoview">'+
+                        '<p><b>'+ data.results.nearby[j].name + '</b><br>' +
+                        '\u2B50 '+ data.results.nearby[j].rating +
+                        '</p></div>'
+                    var latlng=new google.maps.LatLng(data.results.nearby[j].latlongs[0][0],data.results.nearby[j].latlongs[0][1]);
+                    addMarker(map.nearbymarkers,createMarker(contentString,latlng,bluedot));
+                }
+                document.getElementById('chosen').value = data.results.chosen;
+                document.getElementById('bounds').value = bounds;
+                document.getElementById('prevloc').value = "";
+                map.chosen = data.results.chosen;
+                document.getElementById('loadtext').innerHTML = "";
+                searchBtn.disabled = false;
+                randomBtn.disabled = false;
+            }
+            });
+        }, function(error){
+            if (error.code === 1) {
+                document.getElementById('loadtext').innerHTML = "";
+                searchBtn.disabled = false;
+                randomBtn.disabled = false;
+            }
+        });
+
+    }
     $("#zoomarea").click(function() {
         var searchBtn = document.getElementById('zoomarea');
         var randomBtn = document.getElementById('randomchoice')
@@ -84,6 +129,7 @@ $(document).ready(function() {
             data: {},
             complete: function(xhr, status) {},
             success: function(data, status, xhr) {
+                console.log(data)
                 var bounds = new google.maps.LatLngBounds(data.results.southwest,data.results.northeast)
                 map.fitBounds(bounds);
                 for(var j=0;j<data.results.nearby.length;j++){

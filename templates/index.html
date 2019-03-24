@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Food</title>
+    <title>Where's the food</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -20,7 +20,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Food</a>
+        <a class="navbar-brand" href="#">Where's the food</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -34,10 +34,10 @@
                     <a class="nav-link" href="list">Lists</a>
             </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
+            <!-- <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            </form> -->
         </div>
     </nav>
 
@@ -45,8 +45,8 @@
         <div class="row p-4"></div>
         <div class="row">
             <div class="col">
-                <h2>Map</h2>
-                <p>Find the closest food places here</p>
+                <h2>Finding food</h2>
+                <p>If you have problems deciding where to eat, go for Anything and we'll decide for you.</p>
             </div>
             
         </div>
@@ -68,8 +68,8 @@
     <div class="container pb-4">
         <div class="col"></div>
         <div class="col text-center" >
-            <div class="row text-center p-4">
-                <div class="col"></div>
+            <div class="row text-center p-2">
+                <!-- <div class="col"></div> -->
                 <div class="input-group mx-sm-3">
                     <input type="text" class="form-control" id="zoominput">
                     <div class="input-group-append">
@@ -77,8 +77,8 @@
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filterRating" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Any &#11088
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#" id="any">Any &#11088</a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <!-- <a class="dropdown-item" href="#" id="any">Any &#11088</a> -->
                                 <a class="dropdown-item" href="#" id="star5">5 &#11088</a>
                                 <a class="dropdown-item" href="#" id="star4">4 &#11088</a>
                                 <a class="dropdown-item" href="#" id="star3">3 &#11088</a>
@@ -86,18 +86,17 @@
                                 <a class="dropdown-item" href="#" id="star1">1 &#11088</a>
                             </div>
                         </div>
-                        <button id = "zoomarea" class="btn btn-outline-secondary" type="button">Search</button>
-                        <button id="randomchoice" class="btn btn-outline-secondary">Anything</button>
+                        <!-- <button id = "zoomarea" class="btn btn-outline-secondary" type="button">Search</button> -->
+                        <!-- <button id="randomchoice" class="btn btn-outline-secondary">Anything</button> -->
                     </div>
                 </div>
-                <div class="col"></div>
-                <!-- <div class="col align-self-end">
-                    <input id="zoominput" ></input>
-                    <button id="zoomarea" class="btn btn-outline-secondary">Search</button>
-                </div> -->
-                
-
             </div>
+            <div class="row text-center p-2">
+                <button id = "zoomarea" class="col-6 btn btn-outline-secondary" type="button">Search</button>
+                <!-- <div class="col-4"></div> -->
+                <button id="randomchoice" class="col-6 btn btn-outline-secondary" type="button">Anything</button>
+            </div>
+                
             <div id="map" style="width:100%;height:450px;" ></div>
         </div>
         <div class="col"></div>
@@ -112,6 +111,11 @@
     <p hidden id="chosen"></p>
     <p hidden id="bounds"></p>
     <p hidden id="prevloc"></p>
+    <footer class="page-footer font-small">
+        <div class="footer-copyright text-center py-3"> © 2019 Where's the food
+        </div>
+    </footer>
+
 </body>      
 
 

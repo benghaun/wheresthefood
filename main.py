@@ -1,10 +1,12 @@
+from datetime import date
 import os
 import json
 import random
-import sqlite3
+import urllib.parse as urlparse
 
 from flask import Flask
 from flask import request, jsonify, render_template, send_from_directory, redirect
+import psycopg2
 import requests
 
 from utils import search_places_by_coordinate
@@ -46,8 +48,16 @@ def send_css(path):
 
 @app.route('/getdeals', methods=['GET'])
 def getdeals():
-    conn = sqlite3.connect('deals.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-    cur = conn.execute('SELECT * FROM DEALS')
+    url = urlparse.urlparse(os.environ["DATABASE_URL"])
+    conn = psycopg2.connect(
+        database=url.path[1:],
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port
+    )
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM deals WHERE enddate>=%s", (date.today(),))
     rows = cur.fetchall()
     output = []
     for row in rows:

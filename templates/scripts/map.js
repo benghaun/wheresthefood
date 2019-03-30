@@ -105,6 +105,16 @@ $(document).ready(function() {
                 document.getElementById('loadtext').innerHTML = "";
                 searchBtn.disabled = false;
                 randomBtn.disabled = false;
+            },
+            error: function(request, status, error){
+                if (request.status === 400){
+                    const result = JSON.parse(request.responseText);
+                    if (result.error === "location not found"){
+                        document.getElementById('loadtext').innerHTML = "location not found"
+                        searchBtn.disabled = false;
+                        randomBtn.disabled = false;
+                    }
+                }
             }
             });
         }, function(error){
@@ -118,6 +128,7 @@ $(document).ready(function() {
     }
     }
     $("#zoomarea").click(function() {
+        document.getElementById('loadtext').innerHTML = "";
         var searchBtn = document.getElementById('zoomarea');
         var randomBtn = document.getElementById('randomchoice')
         randomBtn.disabled = true;
@@ -152,7 +163,23 @@ $(document).ready(function() {
                 document.getElementById('chosen').value = data.results.chosen;
                 document.getElementById('bounds').value = bounds;
                 document.getElementById('prevloc').value = area;
-                map.chosen = data.results.chosen;
+                if (data.results.chosen){
+                    map.chosen = data.results.chosen;
+                }
+                else{
+                    document.getElementById('loadtext').innerHTML = "Sorry, we couldn't find anywhere to eat nearby";
+                }
+                searchBtn.innerHTML = "Search";
+                searchBtn.disabled = false;
+                randomBtn.disabled = false;
+            },
+            error: function(request, status, error){
+                if (request.status === 400){
+                    const result = JSON.parse(request.responseText);
+                    if (result.error === "location not found"){
+                        document.getElementById('loadtext').innerHTML = "Sorry, this location was not found"
+                    }
+                }
                 searchBtn.innerHTML = "Search";
                 searchBtn.disabled = false;
                 randomBtn.disabled = false;
@@ -166,6 +193,7 @@ $(document).ready(function() {
     });
 
     $("#randomchoice").click(function() {
+        document.getElementById('loadtext').innerHTML = "";
         // remove existing markers
         for(var i=0;i<map.nearbymarkers.length;i++){
             map.nearbymarkers[i].setMap(null);
@@ -200,12 +228,28 @@ $(document).ready(function() {
             success: function(data, status, xhr) {
                 var bounds = new google.maps.LatLngBounds(data.results.southwest,data.results.northeast)
                 map.fitBounds(bounds);
-                var contentString = '<div id="infoview">'+
-                    '<p><b>'+ data.results.chosen.name + '</b><br>' +
-                    '\u2B50 '+ data.results.chosen.rating +
-                    '</p></div>'
-                var latlng=new google.maps.LatLng(data.results.chosen.latlongs[0][0],data.results.chosen.latlongs[0][1]);
-                addMarker(map.nearbymarkers,createMarker(contentString,latlng,bluedot));
+                if (data.results.chosen){
+                    var contentString = '<div id="infoview">'+
+                        '<p><b>'+ data.results.chosen.name + '</b><br>' +
+                        '\u2B50 '+ data.results.chosen.rating +
+                        '</p></div>'
+                    var latlng=new google.maps.LatLng(data.results.chosen.latlongs[0][0],data.results.chosen.latlongs[0][1]);
+                    addMarker(map.nearbymarkers,createMarker(contentString,latlng,bluedot));
+                }
+                else{
+                    document.getElementById('loadtext').innerHTML = "Sorry, we couldn't find anywhere to eat nearby";
+                }
+                randomBtn.disabled = false;
+                searchBtn.disabled = false;
+                randomBtn.innerHTML = "Anything";
+            },
+            error: function(request, status, error){
+                if (request.status === 400){
+                    const result = JSON.parse(request.responseText);
+                    if (result.error === "location not found"){
+                        document.getElementById('loadtext').innerHTML = "Sorry, this location was not found"
+                    }
+                }
                 randomBtn.disabled = false;
                 searchBtn.disabled = false;
                 randomBtn.innerHTML = "Anything";

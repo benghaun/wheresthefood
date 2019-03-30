@@ -17,7 +17,7 @@ GMAPKEY = os.environ.get('gmapkey')
 
 @app.before_request
 def before_request():
-    if request.url.startswith('http://'):
+    if request.url.startswith('http://') and '127.0.0.1' not in request.url:
         url = request.url.replace('http://', 'https://', 1)
         code = 301
         return redirect(url, code=code)
@@ -81,12 +81,17 @@ def viewport():
         minrating = 0
     url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&region=sg&key={}'.format(area, GMAPKEY)
     r = requests.get(url)
+    if len(r.json()['results']) == 0:
+        response = jsonify({'error': 'location not found'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response, 400
     result = r.json()['results'][0]['geometry']['viewport']
     lat = str(r.json()['results'][0]['geometry']['location']['lat'])
     lng = str(r.json()['results'][0]['geometry']['location']['lng'])
     result['nearby'] = search_places_by_coordinate(lat + "," + lng, "600", minrating)
-    chosen = random.choice(result['nearby'])
-    result['chosen'] = chosen
+    if len(result['nearby']) > 0:
+        chosen = random.choice(result['nearby'])
+        result['chosen'] = chosen
     response = jsonify(results=result)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
